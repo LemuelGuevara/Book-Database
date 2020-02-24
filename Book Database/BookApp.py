@@ -1,6 +1,8 @@
 import mysql.connector
 from BookDataserver import mydb
 from BookDataserver import mycursor
+from BookDataserver import sql
+from BookDataserver import sqlformula
 from tkinter import *
 from tkinter import ttk
 from tkinter import messagebox
@@ -9,7 +11,6 @@ font = ("Segoe UI", 10)
 bg = '#939393'
 rel = 'flat'
 List_choices = ["All", "Fiction", "Progamming", "Literature"]
-# Books = ["Harry Potter", "Noli Me Tangere", "Math", "Computer"]
 
 class MyBooks:
     def __init__(self, master): #App
@@ -31,11 +32,17 @@ class MyBooks:
         self.BookClear.place(x=260, y=110, width=110)
 
     def register(self):
-        sqlformula = "INSERT INTO books (Name, Category) VALUES (%s, %s)"
         data = (self.BookEntry.get(), self.BookCategory.get())
         mycursor.execute(sqlformula, data)
         mydb.commit()
         messagebox.showinfo("Book Registration", "Book is registered!")
+
+    def makeCategory(self):
+        category = self.BookCategory.get()
+        mycursor.execute(sql)
+        myresult = mycursor.fetchall()
+        for result in myresult:
+            ListChoices = result([1])
 
     def clear(self):
         self.BookEntry.delete(0, 'end')
@@ -44,7 +51,6 @@ class MyBooks:
         self.Lb.delete(0, 'end')
 
     def database(self):
-        
         top = Toplevel(width=393, height=396, bg= '#939393')
         self.BookList = Label(top, text="Books", font=("Segoe UI", 10), bg='#939393')
         self.List = ttk.Combobox(top, values=List_choices, font=font)
@@ -63,12 +69,12 @@ class MyBooks:
 
     def search(self):
         if self.List.get() == List_choices[0]:
-            for Book in Books:
-                self.Lb.insert(END, Book)
+            mycursor.execute(sql)
+            myresult = mycursor.fetchall()
+            for result in myresult:
+                self.Lb.insert(1, result[0])
         elif self.List.get() == List_choices[1]:
             self.Lb.delete(0, 'end')
-            sql = "SELECT * FROM books WHERE category LIKE 'Fiction'"
-            mycursor.execute(sql)
             myresult = mycursor.fetchall()
             for result in myresult:
                 self.Lb.insert(1, result[0])
