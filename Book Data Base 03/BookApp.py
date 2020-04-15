@@ -1,19 +1,16 @@
 import mysql.connector
 from BookDatabase import mydb
 from BookDatabase import mycursor
-
 from BookDatabase import sqlFormula
 from tkinter import *
 from tkinter import ttk
 from tkinter import messagebox
-
 
 font = ("Segoe UI", 10)
 bg = '#939393'
 rel = 'flat'
 List_choices = ["All", "Fiction", "Progamming", "Literature"]
 Books = "Harry Potter"
-
 
 class MyBooks:
     def __init__(self, master): #App
@@ -84,7 +81,6 @@ class MyBooks:
             myresult = mycursor.fetchall()
             for result in myresult:
                 self.Lb.insert(1, result[0])
-        
         elif self.List.get() == List_choices[2]:
             self.Lb.delete(0, 'end')
             self.Lb.insert(1, Books[2])
